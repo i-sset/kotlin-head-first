@@ -1,21 +1,20 @@
-open class Animal { //open keywords tell explicitly that this class is ok to be a superclass
-    open val image = ""; //open keyword on fields tells that this field can be overrided
-    open val food = ""
-    open val habitat = ""
+interface Roamable {
+    fun roam()
+}
+
+//implementing an interface is the same way as inherit from a super class. The difference is the usage of parenthesis because Interfaces does not have
+// constructors
+abstract class Animal : Roamable { //open keywords tell explicitly that this class is ok to be a superclass. abstract keyword make the class un-instantiable
+    abstract val image: String //open keyword on fields tells that this field can be overrided. abstract fields require the type of the variable
+    abstract val food: String //abstract fields do not need an initial value. the value is given by a concrete class
+    abstract val habitat: String //abstract keyword have the functionality of the open keyword
     var hunger = 10
 
-    open fun makeNoise() {
-        println("The animal is making noise")
-    }
-
-    open fun eat() {
-        println("The animal is eating")
-    }
-
-    open fun roam() {
+    abstract fun makeNoise()
+    abstract fun eat()
+    override fun roam() {
         println("The animal is roaming")
     }
-
     fun sleep() {
         println("The animal is sleeping")
     }
@@ -38,7 +37,7 @@ class Hippo: Animal() { //colon symbol is used to inherit from a superclass. the
 
 }
 
-open class Canine : Animal() {
+abstract class Canine : Animal() {
     override fun roam() {
         println("The canine is romaing");
     }
@@ -58,9 +57,16 @@ class Wolf : Canine() {
     }
 }
 
+
 class Vet {
     fun giveShot(animal: Animal) {
         animal.makeNoise()
+    }
+}
+
+class Vehicle : Roamable {
+    override fun roam() {
+        println("The vehicle is roaming")
     }
 }
 
@@ -77,4 +83,12 @@ fun main(args: Array<String>) {
     val hippo = Hippo()
     vet.giveShot(wolf)
     vet.giveShot(hippo)
+
+    val roamables = arrayOf(Hippo(), Wolf(), Vehicle())
+    for (item in roamables) {
+        item.roam()
+        if (item is Animal) { //is operator checks if the object in the left side is a type or subtype of the type in the right
+            item.eat()
+        }
+    }
 }
